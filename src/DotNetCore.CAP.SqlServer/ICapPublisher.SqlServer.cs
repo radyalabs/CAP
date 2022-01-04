@@ -26,7 +26,7 @@ namespace DotNetCore.CAP.SqlServer
 
         public async Task PublishCallbackAsync(CapPublishedMessage message)
         {
-            await PublishAsyncInternal(message);
+            await PublishAsyncInternal(message, new System.Collections.Generic.Dictionary<string, string>());
         }
 
         protected override async Task ExecuteAsync(CapPublishedMessage message, ICapTransaction transaction = null,

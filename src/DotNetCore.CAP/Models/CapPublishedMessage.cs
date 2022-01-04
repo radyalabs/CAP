@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 
 namespace DotNetCore.CAP.Models
 {
@@ -20,6 +21,7 @@ namespace DotNetCore.CAP.Models
         public string Name { get; set; }
 
         public string Content { get; set; }
+        public string OriginalContent { get; set; }
 
         public DateTime Added { get; set; }
 
@@ -28,6 +30,7 @@ namespace DotNetCore.CAP.Models
         public int Retries { get; set; }
 
         public string StatusName { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         public override string ToString()
         {

@@ -94,7 +94,7 @@ namespace DotNetCore.CAP.Infrastructure
         public static string AddTracingHeaderProperty(string json, TracingHeaders headers)
         {
             var jObject = ToJObject(headers);
-            return AddJsonProperty(json, nameof(TracingHeaders), jObject);
+            return AddJsonProperty(json, "Headers"/*nameof(TracingHeaders)*/, jObject);
         }
 
         public static bool TryExtractTracingHeaders(string json, out TracingHeaders headers, out string removedHeadersJson)

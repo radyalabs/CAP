@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Core Community. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DotNetCore.CAP
@@ -16,6 +17,6 @@ namespace DotNetCore.CAP
         /// <param name="keyName">The message topic name.</param>
         /// <param name="content">The message content.</param>
         /// <returns></returns>
-        Task<OperateResult> PublishAsync(string keyName, string content);
+        Task<OperateResult> PublishAsync(string keyName, string content, Dictionary<string, string> headers);
     }
 }

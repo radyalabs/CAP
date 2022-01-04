@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using DotNetCore.CAP.Models;
+using System.Collections.Generic;
 
 namespace DotNetCore.CAP
 {

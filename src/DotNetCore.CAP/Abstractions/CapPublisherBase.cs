@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,20 +36,22 @@ namespace DotNetCore.CAP.Abstractions
 
         public AsyncLocal<ICapTransaction> Transaction { get; }
 
-        public void Publish<T>(string name, T contentObj, string callbackName = null)
+        public void Publish<T>(string name, T contentObj, Dictionary<string, string> headers, string callbackName = null)
         {
             var message = new CapPublishedMessage
             {
                 Id = SnowflakeId.Default().NextId(),
                 Name = name,
                 Content = Serialize(contentObj, callbackName),
+                OriginalContent = _serializer.Serialize(contentObj),
+                Headers = headers,
                 StatusName = StatusName.Scheduled
             };
 
             PublishAsyncInternal(message).GetAwaiter().GetResult();
         }
 
-        public async Task PublishAsync<T>(string name, T contentObj, string callbackName = null,
+        public async Task PublishAsync<T>(string name, T contentObj, Dictionary<string, string> headers, string callbackName = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var message = new CapPublishedMessage
@@ -56,12 +59,24 @@ namespace DotNetCore.CAP.Abstractions
                 Id = SnowflakeId.Default().NextId(),
                 Name = name,
                 Content = Serialize(contentObj, callbackName),
+                OriginalContent = _serializer.Serialize(contentObj),
+                Headers = headers,
                 StatusName = StatusName.Scheduled
             };
 
             await PublishAsyncInternal(message);
         }
 
+        private void AddExternalHeader(TracingHeaders tracingHeaders, Dictionary<string, string> additionalHeaders)
+        {
+            if (additionalHeaders != null && additionalHeaders.Count > 0)
+            {
+                foreach(var item in additionalHeaders)
+                {
+                    tracingHeaders.Add(item.Key, item.Value);
+                }
+            }
+        }
         protected async Task PublishAsyncInternal(CapPublishedMessage message)
         {
             var operationId = default(Guid);
@@ -70,6 +85,12 @@ namespace DotNetCore.CAP.Abstractions
             {
                 var tracingResult = TracingBefore(message.Name, message.Content);
                 operationId = tracingResult.Item1;
+                
+                /*
+                if (tracingResult.Item2 == null)
+                    tracingResult.Item2 = new TracingHeaders();
+                AddExternalHeader(tracingResult.Item2, headers);
+                */
                 
                 message.Content = tracingResult.Item2 != null
                     ? Helper.AddTracingHeaderProperty(message.Content, tracingResult.Item2)

@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace DotNetCore.CAP.AzureServiceBus
 
         protected override string ServersAddress => _asbOptions.Value.ConnectionString;
 
-        public override async Task<OperateResult> PublishAsync(string keyName, string content)
+        public override async Task<OperateResult> PublishAsync(string keyName, string content, Dictionary<string, string> headers)
         {
             try
             {
@@ -50,6 +51,14 @@ namespace DotNetCore.CAP.AzureServiceBus
                     Body = contentBytes,
                     Label = keyName,
                 };
+
+                if(headers != null)
+                {
+                    foreach(var item in headers)
+                    {
+                        message.UserProperties.Add(item.Key, item.Value);
+                    }
+                }
 
                 await _topicClient.SendAsync(message);
 

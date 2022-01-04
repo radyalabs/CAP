@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using DotNetCore.CAP.Diagnostics;
@@ -41,7 +42,7 @@ namespace DotNetCore.CAP
             _logger = logger;
         }
 
-        public abstract Task<OperateResult> PublishAsync(string keyName, string content);
+        public abstract Task<OperateResult> PublishAsync(string keyName, string content, Dictionary<string, string> headers);
 
         public async Task<OperateResult> SendAsync(CapPublishedMessage message)
         {
@@ -73,7 +74,8 @@ namespace DotNetCore.CAP
                 ? Helper.AddTracingHeaderProperty(message.Content, tracingResult.Item2)
                 : message.Content;
 
-            var result = await PublishAsync(message.Name, sendValues);
+            //var result = await PublishAsync(message.Name, sendValues, message.Headers);
+            var result = await PublishAsync(message.Name, message.OriginalContent, message.Headers);
 
             stopwatch.Stop();
             if (result.Succeeded)
