@@ -56,7 +56,8 @@ namespace DotNetCore.CAP.AzureServiceBus
                 {
                     foreach(var item in headers)
                     {
-                        message.UserProperties.Add(item.Key, item.Value);
+                        if(!message.UserProperties.ContainsKey(item.Key))
+                            message.UserProperties.Add(item.Key, item.Value);
                     }
                 }
 
