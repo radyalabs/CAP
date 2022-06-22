@@ -60,6 +60,10 @@ namespace DotNetCore.CAP.Internal
 
                 var jsonContent = context.DeliverMessage.Content;
                 var message = _messagePacker.UnPack(jsonContent);
+                if (string.IsNullOrEmpty(message.Content))
+                {
+                    message.Content = context.DeliverMessage.Content;
+                }
 
                 object resultObj;
                 if (executor.MethodParameters.Length > 0)
