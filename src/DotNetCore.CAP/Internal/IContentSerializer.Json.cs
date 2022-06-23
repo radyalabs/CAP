@@ -4,11 +4,21 @@
 using System;
 using DotNetCore.CAP.Abstractions;
 using DotNetCore.CAP.Infrastructure;
+using Newtonsoft.Json;
 
 namespace DotNetCore.CAP.Internal
 {
     internal class JsonContentSerializer : IContentSerializer
     {
+        public JsonContentSerializer()
+        {
+            Helper.SetSerializerSettings(new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            });
+        }
+
         public T DeSerialize<T>(string messageObjStr)
         {
             return Helper.FromJson<T>(messageObjStr);
