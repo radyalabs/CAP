@@ -108,6 +108,11 @@ namespace DotNetCore.CAP.Internal
                     return executor.Execute(@class, bindResult.Model);
                 }
 
+                if (parameterString.Length > 500)
+                {
+                    parameterString = "Parameter string is too long!. If you want to see parameter please refer to column Content in Table Received";
+                }
+
                 throw new MethodBindException(
                     $"Parameters:{firstParameter.Name} bind failed! ParameterString is: {parameterString} ");
             }
