@@ -10,7 +10,7 @@ namespace DotNetCore.CAP.Processor.States
     {
         public const string StateName = "Failed";
 
-        public TimeSpan? ExpiresAfter => TimeSpan.FromDays(15);
+        public TimeSpan? ExpiresAfter => TimeSpan.FromDays(7);
 
         public string Name => StateName;
 
